@@ -1,0 +1,21 @@
+.homepage {
+  padding-top: 60px; /* same height as navbar */
+  text-align: center;
+
+  min-height: 100vh;
+  color: white;
+}
+
+.homepage-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  padding: 20px;
+}
+
+.homepage-logo {
+  height: 100px;
+  pointer-events: none;
+}
