@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "./Searchbox.css";
 
 type Country = {
@@ -7,6 +8,7 @@ type Country = {
 };
 
 type PropertyResult = {
+  id: number;
   title: string;
   country: string;
   price: string;
@@ -18,16 +20,13 @@ type SearchBoxProps = {
 };
 
 export default function SearchBox({ onResults }: SearchBoxProps) {
-  const [activeTab, setActiveTab] = useState('BUY');
   const [country, setCountry] = useState('');
   const [location, setLocation] = useState('');
   const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const handleTabClick = (tabName: string) => {
-    setActiveTab(tabName);
-  };
+  const [suggestions, setSuggestions] = useState<PropertyResult[]>([]);
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     try {
@@ -68,22 +67,23 @@ export default function SearchBox({ onResults }: SearchBoxProps) {
     fetchCountries();
   }, []);
 
+  // Add suggestion fetch on location input
+  useEffect(() => {
+    if (location.length > 1) {
+      fetch(`http://localhost:8000/prop/properties/?search=${encodeURIComponent(location)}`)
+        .then(res => res.json())
+        .then(data => setSuggestions(data.results || []));
+    } else {
+      setSuggestions([]);
+    }
+  }, [location]);
+
   return (
     <div className="app-container">
       <div className="search-box-wrapper">
         <h1 className="search-title">Search properties for sale in Pakistan</h1>
 
-        <div className="tabs-container">
-          {['BUY', 'RENT'].map((tab) => (
-            <button
-              key={tab}
-              className={`tab-button ${activeTab === tab ? 'active' : ''}`}
-              onClick={() => handleTabClick(tab)}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+        {/* Remove tabs-container (BUY/RENT) */}
 
         <div className="search-inputs-container">
           {/* Country Selector */}
@@ -129,6 +129,21 @@ export default function SearchBox({ onResults }: SearchBoxProps) {
             click maro
           </button>
         </div>
+
+        {/* Suggestions dropdown */}
+        {suggestions.length > 0 && (
+          <div className="suggestions-dropdown">
+            {suggestions.map((prop, idx) => (
+              <div
+                key={idx}
+                className="suggestion-item"
+                onClick={() => navigate(`/property/${prop.id}`)}
+              >
+                <span>{prop.title}</span> <span style={{color:'#aaa', fontSize:'0.9em'}}>(${prop.price})</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

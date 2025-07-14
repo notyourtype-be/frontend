@@ -1,5 +1,4 @@
-
-        body {
+body {
           margin: 0;
           font-family: 'Inter', sans-serif; /* Using Inter font as per instructions */
           -webkit-font-smoothing: antialiased;
@@ -174,4 +173,31 @@
 
         .separator {
           color: #6B7280; /* text-gray-500 */
+        }
+
+        /* Add to Searchbox.css */
+        .suggestions-dropdown {
+          position: absolute;
+          top: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #fff;
+          color: #222;
+          border-radius: 8px;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+          width: 100%;
+          max-width: 64rem;
+          z-index: 10;
+          padding: 0.5rem 0;
+        }
+        .suggestion-item {
+          padding: 12px 24px;
+          cursor: pointer;
+          transition: background 0.2s;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .suggestion-item:hover {
+          background: #f0f4f8;
         }
